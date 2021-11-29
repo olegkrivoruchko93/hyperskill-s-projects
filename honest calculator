@@ -1,0 +1,67 @@
+msg_ = {
+    0: "Enter an equation",
+    1: "Do you even know what numbers are? Stay focused!",
+    2: "Yes ... an interesting math operation. You've slept through all classes, haven't you?",
+    3: "Yeah... division by zero. Smart move...",
+    4: "Do you want to store the result? (y / n):",
+    5: "Do you want to continue calculations? (y / n):",
+    6: " ... lazy",
+    7: " ... very lazy",
+    8: " ... very, very lazy",
+    9: "You are",
+    10: "Are you sure? It is only one digit! (y / n)",
+    11: "Don't be silly! It's just one number! Add to the memory? (y / n)",
+    12: "Last chance! Do you really want to embarrass yourself? (y / n)"
+}
+
+operations = {
+    "+": (lambda x, y: x + y),
+    "-": (lambda x, y: x - y),
+    "*": (lambda x, y: x * y),
+    "/": (lambda x, y: x / y),
+}
+
+memory = 0.0
+
+def is_one_digit(v):
+    if (v == int(v)) and (-10 < v < 10):
+        return True
+    else:
+        return False
+def check(x, y, oper):
+    msg = ""
+    if is_one_digit(x) and is_one_digit(y):
+        msg = msg + msg_[6]
+    if (x == 1.0 or y == 1.0) and oper == "*":
+        msg = msg + msg_[7]
+    if (x == 0.0 or y == 0.0) and (oper == "*" or oper == "+" or oper == "-"):
+        msg = msg + msg_[8]
+    if msg != "":
+        print(msg_[9] + msg)
+
+while True:
+    print(msg_[0])
+    try:
+        x, oper, y = input().split()
+        x = memory if x == "M" else float(x)
+        y = memory if y == "M" else float(y)
+        check(x, y, oper)
+        result = operations[oper](x, y)
+        print(result)
+        if input(msg_[4]) == "y":
+            if is_one_digit(result):
+                msg_index = 10
+                while (input (msg_[msg_index]) != "n") and msg_index < 12:
+                    msg_index += 1
+                if msg_index == 12:
+                    memory = result
+            else:
+                memory = result
+        if input(msg_[5]) == "n":
+            break
+    except ValueError:
+            print(msg_[1])
+    except KeyError:
+        print(msg_[2])
+    except ZeroDivisionError:
+        print(msg_[3])
